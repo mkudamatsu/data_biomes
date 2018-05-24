@@ -21,7 +21,7 @@ def main():
         url = "https://c402277.ssl.cf1.rackcdn.com/publications/15/files/original/official_teow.zip?1349272619" # Linked from https://www.worldwildlife.org/publications/terrestrial-ecoregions-of-the-world
         downloaded_zip = "../temp/" + "official_teow.zip"
         # Process
-        # download_data(url, downloaded_zip) # This is not working. I should use the request module to work with HTTPS
+        download_data(url, downloaded_zip)
 
         print "Extract all files" # Extracting only necessary files (the .extract() function) does not work. So we extract all and then delete those unnecessary.
         # Setting input and output
@@ -40,6 +40,16 @@ def main():
             else:
                 os.rename("../temp/official/" + file, "../orig/" + file)
 
+        print "Deleting the zip file and the temporary file directory"
+        for file in os.listdir("../temp/official"):
+            print file
+            os.remove("../temp/official/"+file)
+        os.rmdir("../temp/official")
+        for file in os.listdir("../temp"):
+            print file
+            os.remove("../temp/"+file)
+        os.rmdir("../temp/")
+
         print "All done."
 
     # Return any other type of error
@@ -49,8 +59,8 @@ def main():
 ### Define the subfunctions ###
 def download_data(url, output):
     print "...downloading and saving the file"
-    import urllib
-    urllib.urlretrieve(url, output)
+    import wget
+    wget.download(url, output)
 
 def uncompress_zip(in_zip, outdir):
     print "...launching zipfile module" # See http://stackoverflow.com/questions/9431918/extracting-zip-file-contents-to-specific-directory-in-python-2-7
